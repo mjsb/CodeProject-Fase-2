@@ -13,6 +13,16 @@ class UserTableSeeder extends Seeder
     {
         //
         #\CodeProject\Entities\User::truncate();
+        factory(\CodeProject\Entities\User::class)->create([
+
+            'name' => 'Marcio',
+            'email' => 'marciojsb@hotmail.com',
+            'password' => bcrypt(123456),
+            'remember_token' => str_random(10),
+
+        ]);
+
         factory(\CodeProject\Entities\User::class, 10)->create();
+
     }
 }

@@ -12,7 +12,7 @@ class ProjectNote extends Model implements Transformable
 
     protected $fillable = [
 
-        'projetc_id',
+        'project_id',
         'title',
         'note'
     ];

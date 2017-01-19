@@ -4,6 +4,7 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 
@@ -26,18 +27,8 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        return $this->repository->all();
+        return $this->repository->findWhere(['owner_id'=>\Authorizer::getResourceOwnerId()]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-   /* public function create()
-    {
-        //
-    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -60,22 +51,24 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        //
-        #return Project::find($id);
-        return $this->repository->with('user')->with('client')->find($id);
+
+        try {
+
+            if($this->checkProjectPermissions($id) == false) {
+
+                return ['error'=>true, 'Acesso não permitido!'];
+
+            }
+
+            return $this->repository->find($id);
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Projeto não encontrado!'];
+
+        }
 
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   /* public function edit($id)
-    {
-        //
-    }*/
 
     /**
      * Update the specified resource in storage.
@@ -86,7 +79,23 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+            if($this->checkProjectPermissions($id) == false) {
+
+                return ['error'=>true, 'Acesso não permitido!'];
+
+            }
+
+            $this->service->update($request->all(), $id);
+            return ['error'=>false, 'Projeto atualizado!'];
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Projeto não encontrado!'];
+
+        }
+
     }
 
     /**
@@ -97,8 +106,53 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
-        #Project::find($id)->delete();
-        $this->repository->find($id)->delete();
+
+        try {
+
+            if($this->checkProjectOwner($id) == false) {
+
+                return ['error'=>true, 'Acesso não permitido!'];
+
+            }
+
+            $this->repository->find($id)->delete();
+            return ['success'=>false, 'Projeto excluído com sucesso!'];
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Projeto não encontrado!'];
+
+        } catch (\Exception $e) {
+
+            return ['error'=>true, 'Ocorreu algum erro ao excluir o projeto.'];
+
+        }
+
     }
+
+    private function checkProjectOwner($projectId) {
+
+        $userId = \Authorizer::getResourceOwnerId();
+        return $this->repository->isOwner($projectId, $userId);
+
+    }
+
+    private function checkProjectMember($projectId) {
+
+        $userId = \Authorizer::getResourceOwnerId();
+        return $this->repository->hasMember($projectId, $userId);
+
+    }
+
+    private function checkProjectPermissions($projectId) {
+
+        if($this->checkProjectOwner($projectId) or $this->checkProjectMember($projectId)) {
+
+            return true;
+
+        }
+
+        return false;
+    }
+
 }

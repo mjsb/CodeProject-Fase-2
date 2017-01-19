@@ -4,6 +4,7 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ClientRepository;
 use CodeProject\Services\ClientService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -54,6 +55,7 @@ class ClientController extends Controller
         //
         return $this->service->create($request->all());
         #return Client::create($request->all());
+
     }
 
     /**
@@ -64,9 +66,16 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
 
-        return Client::find($id);
+            return $this->repository->find($id);
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Cliente não encontrado!'];
+
+        }
+
     }
 
     /**
@@ -89,8 +98,17 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        Client::find($id)->update($request->all());
+        try {
+
+            $this->repository->find($id)->update($request->all());
+            return ['error'=>false, 'Cliente atualizado!'];
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Cliente não encontrado!'];
+
+        }
+
     }
 
     /**
@@ -101,7 +119,24 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        //
-        Client::find($id)->delete();
+        try {
+
+            $this->repository->find($id)->delete();
+            return ['success'=>false, 'Cliente excluído com sucesso!'];
+
+        } catch (QueryException $e) {
+
+            return ['error'=>true, 'Cliente não pode ser excluído pois existe um ou mais projetos vinculados a ele.'];
+
+        } catch (ModelNotFoundException $e) {
+
+            return ['error'=>true, 'Cliente não encontrado!'];
+
+        } catch (\Exception $e) {
+
+            return ['error'=>true, 'Ocorreu algum erro ao excluir o cliente.'];
+
+        }
+
     }
 }
