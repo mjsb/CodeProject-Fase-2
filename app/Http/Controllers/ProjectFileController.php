@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 
-class ProjectController extends Controller
+class ProjectFileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,9 +26,8 @@ class ProjectController extends Controller
 
     public function index()
     {
-
+        //
         return $this->repository->findWhere(['owner_id'=>\Authorizer::getResourceOwnerId()]);
-
     }
 
     /**
@@ -39,9 +38,20 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        #return Project::create($request->all());
-        return $this->repository->create($request->all());
+
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+
+        $data['file'] = $file;
+        $data['extension'] = $extension;
+        $data['name'] = $request->name;
+        $data['project_id'] = $request->project_id;
+        $data['description'] = $request->description;
+
+        $this->service->createFile($data);
+
+        //Storage::put($request->name.".".$extension, File::get($file));
+
     }
 
     /**
@@ -68,59 +78,6 @@ class ProjectController extends Controller
             return ['error'=>true, 'Projeto não encontrado!'];
 
         }
-
-    }
-
-    public function member($projectId, $memberId) {
-
-        try {
-
-            if($this->checkProjectPermissions($projectId) == false) {
-
-                return ['error'=>true, 'Acesso não permitido!'];
-
-            }
-
-            return $this->service->isMember($projectId, $memberId);
-
-        } catch (ModelNotFoundException $e) {
-
-            return ['error'=>true, 'Membro não encontrado!'];
-
-        }
-
-    }
-
-    public function showMembers($projectId)
-    {
-
-        try {
-
-            if($this->checkProjectPermissions($projectId) == false) {
-
-                return ['error'=>true, 'Acesso não permitido!'];
-
-            }
-
-            return $this->service->showMembers($projectId);
-
-        } catch (ModelNotFoundException $e) {
-
-            return ['error'=>true, 'Projeto não encontrado!'];
-
-        }
-
-    }
-
-    public function addmember($projectId, $memberId){
-
-        return $this->service->addMember($projectId, $memberId);
-
-    }
-
-    public function removemember($projectId, $memberId){
-
-        return $this->service->removeMember($projectId, $memberId);
 
     }
 

@@ -26,11 +26,6 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
      * Boot up the repository, pushing criteria
      */
 
-    public function boot()
-    {
-        $this->pushCriteria(app(RequestCriteria::class));
-    }
-
     public function isOwner($projectId, $userId) {
 
         if(count($this->findWhere(['id' => $projectId, 'owner_id' => $userId]))) {
@@ -58,5 +53,10 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
 
         return ProjectPresenter::class;
 
+    }
+
+    public function boot()
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
     }
 }
