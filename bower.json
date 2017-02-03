@@ -1,0 +1,28 @@
+{
+  "name": "laravel-codeproject-frontend",
+  "description": "frontend do gerenciador de projetos",
+  "main": "",
+  "authors": [
+    "Marcio Borges <marciojsb@hotmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/mjsb/CodeProject-Fase-2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "resources/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.6.1",
+    "angular-route": "1.6.1",
+    "angular-resource": "1.6.1",
+    "angular-animate": "1.6.1",
+    "angular-messages": "1.6.1",
+    "angular-bootstrap": "2.5.0",
+    "angular-strap": "2.3.12",
+    "bootstrap": "3.3.7"
+  }
+}
