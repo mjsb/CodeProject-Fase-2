@@ -15,7 +15,6 @@ Route::get('/', function () {
     return view('app');
 });
 
-
 /*Route::get('projeto', function() {
 
 	echo "Olá!";
