@@ -45,11 +45,11 @@ Route::group(['middleware'=>'oauth'], function () {
 
     Route::group(['prefix'=>'projeto'], function (){
 
-        Route::get('{id}/note', 'ProjectNoteController@index');
-        Route::post('{id}/note', 'ProjectNoteController@store');
-        Route::get('{id}/note/{noteId}', 'ProjectNoteController@show');
-        Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
-        Route::delete('{id}/note/{noteId}', 'ProjectNoteController@delete');
+        Route::get('{id}/nota', 'ProjectNoteController@index');
+        Route::post('{id}/nota', 'ProjectNoteController@store');
+        Route::get('{id}/nota/{noteId}', 'ProjectNoteController@show');
+        Route::put('{id}/nota/{noteId}', 'ProjectNoteController@update');
+        Route::delete('{id}/nota/{noteId}', 'ProjectNoteController@delete');
 
         Route::get('{id}/membro','ProjectController@showMembers');
         Route::get('{id}/membro/{membroId}','ProjectController@member');
@@ -61,29 +61,31 @@ Route::group(['middleware'=>'oauth'], function () {
 
         Route::post('{id}/file','ProjectFileController@store');
 
-
-
     });
 
+    Route::get('user/authenticated', 'UserController@authenticated');
 
-    /*Route::get('cliente', ['middleware'=>'oauth', 'uses'=>'ClientController@index']);
+    /*
+
+    Route::get('cliente', ['middleware'=>'oauth', 'uses'=>'ClientController@index']);
     Route::post('cliente', 'ClientController@store');
     Route::get('cliente/{id}', 'ClientController@show');
     Route::delete('cliente/{id}', 'ClientController@destroy');
-    Route::post('cliente/edit/{id}', 'ClientController@update');*/
+    Route::post('cliente/edit/{id}', 'ClientController@update');
 
-    /*Route::get('projeto/{id}/note', 'ProjectNoteController@index');
+    Route::get('projeto/{id}/note', 'ProjectNoteController@index');
     Route::post('projeto/{id}/note', 'ProjectNoteController@store');
     Route::get('projeto/{id}/note/{noteId}', 'ProjectNoteController@show');
     Route::put('projeto/{id}/note/{noteId}', 'ProjectNoteController@update');
-    Route::delete('projeto/{id}/note/{noteId}', 'ProjectNoteController@delete');*/
+    Route::delete('projeto/{id}/note/{noteId}', 'ProjectNoteController@delete');
 
-
-    /*Route::get('projeto', 'ProjectController@index');
+    Route::get('projeto', 'ProjectController@index');
     Route::post('projeto', 'ProjectController@store');
     Route::get('projeto/{id}', 'ProjectController@show');
     Route::delete('projeto/{id}', 'ProjectController@destroy');
-    Route::post('projeto/edit/{id}', 'ProjectController@update');*/
+    Route::post('projeto/edit/{id}', 'ProjectController@update');
+
+    */
 
 });
 

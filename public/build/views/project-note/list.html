@@ -1,0 +1,30 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Notas de Projeto</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Nota</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="o in projectNote">
+                                <td>{{o.title}}</td>
+                                <td>{{o.note | limitTo:50}}...</td>
+                                <td>
+                                    <a ng-href="#/projeto/{{o.project_id}}/nota/{{o.id}}/editar">Editar</a> |
+                                    <a ng-href="#/projeto/{{o.project_id}}/nota/{{o.id}}/remover">Excluir</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

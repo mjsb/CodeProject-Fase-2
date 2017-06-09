@@ -27,7 +27,7 @@ class ProjectTransformer extends TransformerAbstract
             'Descrição' => $project->description,
             'Progresso' => $project->progress,
             'Status' => $project->status,
-            'Previsão' => $project->due_date,
+            'Prazo' => $project->due_date,
 
         ];
     }
@@ -37,4 +37,5 @@ class ProjectTransformer extends TransformerAbstract
         return $this->collection($project->members, new ProjectMemberTransformer());
 
     }
+
 }
