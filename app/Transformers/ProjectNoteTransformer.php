@@ -1,31 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marcio
- * Date: 19/01/2017
- * Time: 15:33
- */
 
 namespace CodeProject\Transformers;
 
 use CodeProject\Entities\ProjectNote;
 use League\Fractal\TransformerAbstract;
 
-class ProjectNoteTransformer extends TransformerAbstract
-{
+class ProjectNoteTransformer extends TransformerAbstract {
 
-    #protected $defaultIncludes = ['members'];
-
-    public function transform(ProjectNote $project) {
+    public function transform(ProjectNote $note) {
 
         return [
 
-            'id' => $project->id,
-            'Projeto' => $project->project_id,
-            'Título' => $project->title,
-            'Nota' => $project->note,
+            'id' => $note->id,
+            'project_id' => $note->project_id,
+            'title' => $note->title,
+            'note' => $note->note,
 
         ];
+
     }
 
 }

@@ -7,11 +7,13 @@ angular.module('app.controllers')
             $scope.save = function () {
                 if($scope.form.$valid) {
                     Project.update({
-                        id: $scope.project.id},
-                        $scope.project,
+                        id: $scope.project.id
+                    },
+                    $scope.project,
                         function () {
-                            $location.path('/projeto/'+$routeParams.id);
-                    });
+                            $location.path('/projeto');
+                        }
+                    );
                 }
             }
         }

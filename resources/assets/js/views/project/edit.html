@@ -8,7 +8,7 @@
                         <div class="form-group" ng-class="{'has-error':!form.title.$valid && form.title.$touched}">
                             <label class="col-md-4 control-label">Título</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="title" ng-model="projectNote.title" required>
+                                <input type="text" class="form-control" name="title" ng-model="project.title" required>
                                 <div ng-messages="form.title.$error" class="help-block" ng-show="form.title.$touched">
                                     <div ng-message="required">Campo obrigatório!</div>
                                 </div>
@@ -17,7 +17,7 @@
                         <div class="form-group" ng-class="{'has-error':!form.note.$valid && form.note.$touched}">
                             <label class="col-md-4 control-label">Nota</label>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="note" ng-model="projectNote.note" required ></textarea>
+                                <textarea class="form-control" name="note" ng-model="project.note" required ></textarea>
                                 <div ng-messages="form.note.$error" class="help-block" ng-show="form.note.$touched">
                                     <div ng-message="required">Campo obrigatório!</div>
                                 </div>

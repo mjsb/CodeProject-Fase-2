@@ -9,9 +9,11 @@ angular.module('app.controllers')
                     Client.update({
                         id: $scope.client.id
                     },
-                    $scope.client,function () {
-                        $location.path('/cliente');
-                    });
+                    $scope.client,
+                        function () {
+                            $location.path('/cliente');
+                        }
+                    );
                 }
             }
         }

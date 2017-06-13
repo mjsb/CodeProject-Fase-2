@@ -1,11 +1,22 @@
-var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.services']);
+var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.services']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
+angular.module('app.filters',[]);
 angular.module('app.services',['ngResource']);
 
 app.provider('appConfig', function(){
 
-    var config = {baseUrl:'http://localhost:8000'};
+    var config = {
+        baseUrl:'http://localhost:8000',
+        project:{
+            status: [
+                {value: 1, label: 'Parado'},
+                {value: 2, label: 'Iniciado'},
+                {value: 3, label: 'Pausado'},
+                {value: 4, label: 'Finalizado'}
+            ]
+        }};
+
     return {
         config: config,
         $get: function(){
@@ -56,7 +67,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
             controller: 'ClientEditController'
         })
 
-        .when('/cliente/:id/remover', {
+        .when('/cliente/:id/excluir', {
             templateUrl: 'build/views/client/remove.html',
             controller: 'ClientRemoveController'
         })
@@ -76,7 +87,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
             controller: 'ProjectEditController'
         })
 
-        .when('/projeto/:id/remover', {
+        .when('/projeto/:id/excluir', {
             templateUrl: 'build/views/project/remove.html',
             controller: 'ProjectRemoveController'
         })
@@ -101,7 +112,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
             controller: 'ProjectNoteEditController'
         })
 
-        .when('/projeto/:id/nota/:idNote/remover', {
+        .when('/projeto/:id/nota/:idNote/excluir', {
             templateUrl: 'build/views/project-note/remove.html',
             controller: 'ProjectNoteRemoveController'
         }
@@ -110,7 +121,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
 
     OAuthProvider.configure({
         baseUrl: appConfigProvider.config.baseUrl,
-        clientId: 'appId1',
+        clientId: 'app',
         clientSecret: 'secret', // optional
         grantPath: 'oauth/access_token'
     });

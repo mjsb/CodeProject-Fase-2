@@ -10,7 +10,8 @@ angular.module('app.controllers')
                     id: null,
                     idNote: $scope.projectNote.id
                 }).then(function () {
-                    $location.path('/projeto/' + $routeParams.id + '/nota');
+                    $location.path('/projeto/' + $routeParams.id + 'nota');
                 });
             }
-    }]);
+        }
+    ]);

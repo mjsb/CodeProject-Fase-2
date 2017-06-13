@@ -1,22 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marcio
- * Date: 13/01/2017
- * Time: 19:13
- */
 
 namespace CodeProject\Repositories;
 
-use CodeProject\Entities\Project;
-use CodeProject\Presenters\ProjectPresenter;
+use CodeProject\Validators\ClientValidator;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use CodeProject\Repositories\ProjectRepository;
+use CodeProject\Entities\Project;
+use CodeProject\Presenters\ProjectPresenter;
 
-class ProjectRepositoryEloquent extends BaseRepository implements ProjectRepository
-{
+/**
+ * Class ProjectRepositoryEloquent
+ * @package namespace CodeProject\Repositories;
+ */
 
-    public function model(){
+class ProjectRepositoryEloquent extends BaseRepository implements ProjectRepository {
+
+    /**
+     * Specify Model class name
+     * @return string
+     */
+
+    public function model() {
 
         return Project::class;
 
@@ -26,26 +31,75 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
      * Boot up the repository, pushing criteria
      */
 
+    public function boot() {
+
+        $this->pushCriteria(app(RequestCriteria::class));
+
+    }
+
     public function isOwner($projectId, $userId) {
 
-        if(count($this->findWhere(['id' => $projectId, 'owner_id' => $userId]))) {
+        if(count($this->skipPresenter()->findWhere(['id'=>$projectId, 'owner_id'=>$userId]))){
+
             return true;
+
         }
 
         return false;
+
     }
 
     public function hasMember($projectId, $memberId) {
 
-        $project = $this->find($projectId);
-        foreach($project->members as $member) {
+        $project = $this->skipPresenter()->find($projectId);
 
-            if($member->id == $memberId) {
+        foreach($project->members as $member){
+
+            if($member->id == $memberId){
+
                 return true;
+
             }
+
         }
 
         return false;
+
+    }
+
+    public function findOwner($userId, $limit = null, $columns = []){
+
+        return $this->scopeQuery(function($query) use($userId){
+
+            return $query->select('projects.*')->where('owner_id','=',$userId);
+
+        })->paginate($limit,$columns);
+
+    }
+
+    public function findMember($userId, $limit = null, $columns = []){
+
+        return $this->scopeQuery(function($query) use($userId){
+
+            return $query->select('projects.*')->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')
+
+                ->where('project_members.member_id','=',$userId);
+
+        })->paginate($limit,$columns);
+
+    }
+
+    public function findWithOwnerAndMember($userId) {
+
+        return $this->scopeQuery(function($query) use($userId){
+
+            return $query->select('projects.*')->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')
+
+                ->where('project_members.member_id','=',$userId)
+
+                ->union($this->model->query()->getQuery()->where('owner_id','=',$userId));
+
+        })->all();
 
     }
 
@@ -55,8 +109,10 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
 
     }
 
-    public function boot()
-    {
-        $this->pushCriteria(app(RequestCriteria::class));
+    public function validator() {
+
+        return \CodeProject\Validators\ProjectValidator::class;
+
     }
+
 }

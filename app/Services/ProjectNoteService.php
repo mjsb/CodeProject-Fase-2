@@ -64,4 +64,87 @@ class ProjectNoteService
         }
 
     }
+
+    /*
+
+    public function show($noteId) {
+
+        try{
+
+            return  $this->repository->find($noteId);
+
+        }catch (ModelNotFoundException $e) {
+
+            return [
+
+                'error'=>true,
+                'message'=>'nota nao encontrado!'
+
+            ];
+
+        }catch (QueryException $e){
+
+            return[
+
+                'error'=>true,
+                'message'=>'Erro'
+
+            ];
+
+        }catch (Exception $e){
+
+            return[
+
+                'error'=>true,
+                'message'=>'Ocorreu algum erro ao buscar este nota'
+
+            ];
+
+        }
+
+    }
+
+    public function delete($noteId) {
+
+        try {
+
+            $this->repository->delete($noteId);
+
+            return [
+
+                'success'=>true,
+                'message' => 'nota deletada com sucesso!'
+
+            ];
+
+        } catch (ModelNotFoundException $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'nota nao encontrado!'
+
+            ];
+
+        } catch (QueryException $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'Erro'
+
+            ];
+
+        } catch (Exception $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'Ocorreu algum erro ao deletar este nota'
+
+            ];
+
+        }
+
+    }*/
 }

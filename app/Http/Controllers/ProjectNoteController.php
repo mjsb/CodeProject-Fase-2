@@ -64,12 +64,32 @@ class ProjectNoteController extends Controller
         #return Project::find($id);
         #return $this->repository->with('user')->with('client')->find($id);
         #return $this->repository->findWhere(['project_id' => $id, 'id' => $noteId]);
+
+        /*
+
         $result = $this->repository->findWhere(['project_id' => $id, 'id' => $noteId]);
         if(isset($result['data']) && count($result['data']) == 1) {
             $result = ['data' => $result['data'][0]];
         }
 
         return $result;
+
+        */
+
+        $result = $this->repository->findWhere(['project_id'=>$id, 'id'=>$noteId]);
+        if(isset($result['data']) && count($result['data'])==1) {
+
+            $result = [
+
+                'data' => $result['data'][0]
+
+            ];
+
+        }
+
+        return $result;
+
+        #return $this->service->show($noteId);
 
     }
 
@@ -103,10 +123,11 @@ class ProjectNoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($noteId)
     {
         //
         #Project::find($id)->delete();
-        $this->repository->find($id)->delete();
+        #$this->repository->find($id)->delete();
+        return $this->service->delete($noteId);
     }
 }

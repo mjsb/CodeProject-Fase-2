@@ -121,4 +121,51 @@ class ProjectService
         $this->storage->put($projectFile->id.".".$data['extension'], $this->filesystem->get($data['file']));
 
     }
+
+    /*public function show($id) {
+
+        try {
+
+            $data = $this->repository->with(['client', 'user'])->find($id);
+
+            if (count($data) > 0) {
+                return $data;
+            } else {
+                return [
+                    'error' => true,
+                    'message' => 'Este Projeto não Existe'
+                ];
+
+            }
+
+        } catch (ModelNotFoundException $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'Projeto não encontrado!'
+
+            ];
+
+        } catch (QueryException $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'Erro'
+
+            ];
+
+        } catch (Exception $e) {
+
+            return [
+
+                'error' => true,
+                'message' => 'Ocorreu algum erro ao buscar este projeto'
+
+            ];
+
+        }
+
+    }*/
 }

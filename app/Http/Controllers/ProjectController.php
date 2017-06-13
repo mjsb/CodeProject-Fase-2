@@ -53,7 +53,7 @@ class ProjectController extends Controller
     public function show($id)
     {
 
-        try {
+       /* try {
 
             if($this->checkProjectPermissions($id) == false) {
 
@@ -66,6 +66,25 @@ class ProjectController extends Controller
         } catch (ModelNotFoundException $e) {
 
             return ['error'=>true, 'Projeto não encontrado!'];
+
+        }*/
+
+        #return $this->service->show($id);
+        try {
+
+            return $this->repository->with(['owner', 'client'])->find($id);
+
+        } catch (ModelNotFoundException $e) {
+
+            return $this->erroMsgm('Projeto não encontrado.');
+
+        } catch (NoActiveAccessTokenException $e) {
+
+            return $this->erroMsgm('Usuário não está logado.');
+
+        } catch (\Exception $e) {
+
+            return $this->erroMsgm('Ocorreu um erro ao exibir o projeto.');
 
         }
 
