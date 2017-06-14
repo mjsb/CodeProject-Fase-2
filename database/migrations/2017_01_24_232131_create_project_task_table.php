@@ -12,7 +12,7 @@ class CreateProjectTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_task', function (Blueprint $table) {
+        Schema::create('project_tasks', function (Blueprint $table) {
 
             $table->increments('id');
             $table->string('name');
@@ -31,6 +31,6 @@ class CreateProjectTaskTable extends Migration
      */
     public function down()
     {
-        Schema::drop('project_task');
+        Schema::drop('project_tasks');
     }
 }

@@ -1,4 +1,9 @@
 /vendor
 /node_modules
+.idea
 .env
+.env.example
 resources/bower_components
+codeproject_curso.sql
+codeproject_curso_estrutura.sql
+

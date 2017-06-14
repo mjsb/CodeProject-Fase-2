@@ -12,7 +12,7 @@ class AddIdInProjectTask extends Migration
      */
     public function up()
     {
-        Schema::table('project_task', function (Blueprint $table) {
+        Schema::table('project_tasks', function (Blueprint $table) {
 
             $table->integer('project_id')->unsigned();
             $table->foreign('project_id')->references('id')->on('projects');
@@ -27,7 +27,7 @@ class AddIdInProjectTask extends Migration
      */
     public function down()
     {
-        Schema::table('project_task', function (Blueprint $table) {
+        Schema::table('project_tasks', function (Blueprint $table) {
             //
         });
     }
