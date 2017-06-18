@@ -15,7 +15,7 @@ class OAuthClientSeeder extends Seeder
 
             [
 
-                'id' => 'appId1',
+                'id' => 'app',
                 'secret' => 'secret',
                 'name' => 'App AngularJS',
                 'created_at' =>  '09/06/2017',
