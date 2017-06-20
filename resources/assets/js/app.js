@@ -19,16 +19,16 @@ app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSe
 
         utils: {
             transformRequest: function (data) {
-                if (angular.isObject(data)) {
+                if(angular.isObject(data)) {
                     return $httpParamSerializerProvider.$get()(data);
                 }
                 return data;
             },
             transformResponse: function (data, headers) {
                 var headersGetter = headers();
-                if (headersGetter['content-type'] == 'application/json' || headersGetter['content-type'] == 'text/json') {
+                if(headersGetter['content-type'] == 'application/json' || headersGetter['content-type'] == 'text/json') {
                     var dataJson = JSON.parse(data);
-                    if (dataJson.hasOwnProperty('data') && Object.keys(dataJson).length == 1) {
+                    if(dataJson.hasOwnProperty('data') && Object.keys(dataJson).length == 1) {
                         dataJson = dataJson.data;
                     }
                     return dataJson;
@@ -51,7 +51,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
 
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
     $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-    $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformRequest;
+    $httpProvider.defaults.transformRequest = appConfigProvider.config.utils.transformRequest;
     $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformResponse;
 
     $routeProvider

@@ -127,11 +127,15 @@ class ProjectNoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($noteId)
-    {
+    public function destroy($id,$noteId) {
         //
         #Project::find($id)->delete();
         #$this->repository->find($id)->delete();
-        return $this->service->delete($noteId);
+        #return $this->service->delete($noteId);
+
+        if($this->repository->skipPresenter()->find($noteId)->delete()){
+            return ['success'=>true, 'message'=>'Nota '.$noteId.' excluída com sucesso!'];
+        }
+        return ['error'=>true, 'message'=>'Não foi possível excluir a nota '.$noteId];
     }
 }

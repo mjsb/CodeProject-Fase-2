@@ -53,8 +53,21 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         //
-        return $this->service->create($request->all());
+        #return $this->service->create($request->all());
         #return Client::create($request->all());
+
+        try {
+
+            return $this->service->create($request->all());
+
+        } catch (ValidatorException $e) {
+
+            return Response::json([
+                'error' => true,
+                'message' => $e->getMessageBag()
+            ], 400);
+
+        }
 
     }
 

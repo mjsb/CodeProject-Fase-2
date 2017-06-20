@@ -183,13 +183,11 @@ class ProjectController extends Controller
         try {
 
             if($this->checkProjectOwner($id) == false) {
-
                 return ['error'=>true, 'Acesso não permitido!'];
-
             }
 
             $this->repository->find($id)->delete();
-            return ['success'=>false, 'Projeto excluído com sucesso!'];
+            return ['success'=>true, 'Projeto excluído com sucesso!'];
 
         } catch (ModelNotFoundException $e) {
 
