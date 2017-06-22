@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
-class ProjectFile extends Model implements Transformable
-{
+class ProjectFile extends Model implements Transformable {
+
     use TransformableTrait;
 
     protected $fillable = [
@@ -16,13 +16,15 @@ class ProjectFile extends Model implements Transformable
         'extension',
     ];
 
-    public function project()
-    {
+    public function project() {
+
         return $this->belongsTo(Project::class);
+
     }
 
-    public function getFileName()
-    {
+    public function getFileName() {
+
         return $this->id.".".$this->extension;
+
     }
 }

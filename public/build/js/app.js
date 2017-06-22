@@ -1,7 +1,9 @@
-var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.services']);
+var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.directives','app.services',
+'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ngFileUpload']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.filters',[]);
+angular.module('app.directives',[]);
 angular.module('app.services',['ngResource']);
 
 app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSerializerProvider){
@@ -15,6 +17,10 @@ app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSe
                 {value: 3, label: 'Pausado'},
                 {value: 4, label: 'Finalizado'}
             ]
+        },
+
+        urls: {
+            projectFile: '/projeto/{{id}}/arquivo/{{idFile}}'
         },
 
         utils: {
@@ -129,6 +135,26 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
         .when('/projeto/:id/nota/:idNote/excluir', {
             templateUrl: 'build/views/project-note/remove.html',
             controller: 'ProjectNoteRemoveController'
+        })
+
+        .when('/projeto/:id/arquivo', {
+            templateUrl: 'build/views/project-file/list.html',
+            controller: 'ProjectFileListController'
+        })
+
+        .when('/projeto/:id/arquivo/novo', {
+            templateUrl: 'build/views/project-file/new.html',
+            controller: 'ProjectFileNewController'
+        })
+
+        .when('/projeto/:id/arquivo/:idFile/editar', {
+            templateUrl: 'build/views/project-file/edit.html',
+            controller: 'ProjectFileEditController'
+        })
+
+        .when('/projeto/:id/arquivo/:idFile/excluir', {
+            templateUrl: 'build/views/project-file/remove.html',
+            controller: 'ProjectFileRemoveController'
         }
 
     );
