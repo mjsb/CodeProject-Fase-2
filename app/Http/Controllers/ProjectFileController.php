@@ -41,7 +41,7 @@ class ProjectFileController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request, $id) {
 
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
@@ -49,7 +49,7 @@ class ProjectFileController extends Controller {
         $data['file'] = $file;
         $data['extension'] = $extension;
         $data['name'] = $request->name;
-        $data['project_id'] = $request->project_id;
+        $data['project_id'] = $id;
         $data['description'] = $request->description;
 
         return $this->service->create($data);
@@ -61,35 +61,24 @@ class ProjectFileController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-
-        if($this->service->checkProjectPermissions($id) == false) {
-            return ['error' => 'Acesso Negado!'];
-        }
+    public function show($projectId, $id) {
 
         return $this->repository->find($id);
 
     }
 
-    public function showFile($id) {
-
-        if($this->service->checkProjectPermissions($id) == false) {
-            return ['error' => 'Acesso Negado!'];
-        }
+    public function showFile($projectId, $id) {
 
         $filePath = $this->service->getFilePath($id);
         $fileContent = file_get_contents($filePath);
         $file64 = base64_encode($fileContent);
-
         return [
             'file' => $file64,
             'size' => filesize($filePath),
             'name' => $this->service->getFileName($id),
-//            'mime_type' => $this->service->getMimeType($id)
+            #'mime_type' => $this->service->getMimeType($id)
         ];
-
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -98,11 +87,7 @@ class ProjectFileController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-
-        if($this->service->checkProjectOwner($id) == false) {
-            return ['error' => 'Acesso Negado!'];
-        }
+    public function update(Request $request, $projectId, $id) {
 
         return $this->service->update($request->all(), $id);
 
@@ -114,13 +99,10 @@ class ProjectFileController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($projectId, $id) {
 
-        if($this->service->checkProjectOwner($id) == false) {
-            return ['error' => 'Acesso Negado!'];
-        }
+       $this->service->delete($id);
 
-        $this->service->delete($id);
     }
 
 }

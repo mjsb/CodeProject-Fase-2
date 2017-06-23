@@ -22,6 +22,9 @@ class ProjectController extends Controller {
 
         $this->repository = $repository;
         $this->service = $service;
+        $this->middleware('check.project.owner', ['except' => ['index', 'store', 'show', 'projectsMember']]);
+        $this->middleware('check.project.permission', ['except' => ['index', 'store', 'update', 'destroy', 'projectsMember']]);
+
     }
 
     /**
@@ -31,7 +34,8 @@ class ProjectController extends Controller {
      */
     public function index() {
 
-            return $this->repository->findWhere(['owner_id' => \Authorizer::getResourceOwnerId()]);
+            return $this->repository->findWithOwnerAndMember(\Authorizer::getResourceOwnerId());
+
     }
 
     /**
@@ -53,12 +57,8 @@ class ProjectController extends Controller {
      */
     public function show($id) {
 
-        if($this->service->checkProjectPermissions($id) == false) {
-
-            return ['error' => 'Acesso Negado!'];
-        }
-
-        return $this->repository->find($id);
+        #return $this->repository->find($id);
+        return $this->repository->with(['owner', 'client'])->find($id);
 
     }
 
@@ -71,12 +71,8 @@ class ProjectController extends Controller {
      */
     public function update(Request $request, $id) {
 
-        if($this->service->checkProjectOwner($id) == false) {
-
-            return ['error' => 'Acesso Negado!'];
-        }
-
         return $this->service->update($request->all(), $id);
+
     }
 
     /**
@@ -87,12 +83,8 @@ class ProjectController extends Controller {
      */
     public function destroy($id) {
 
-        if($this->service->checkProjectOwner($id) == false) {
-
-            return ['error' => 'Acesso Negado!'];
-        }
-
         $this->repository->delete($id);
+
     }
 
 }

@@ -21,7 +21,7 @@ class ProjectTransformer extends TransformerAbstract
             'progress' => (int) $project->progress,
             'status' => $project->status,
             'due_date' => $project->due_date,
-            #'is_member' => $project->owner_id != \Authorizer::getResourceOwnerId(),
+            'is_member' => $project->owner_id != \Authorizer::getResourceOwnerId(),
             #'tasks_count' => $project->tasks->count(),
             #'tasks_opened' => $this->countTasksOpened($project)
         ];

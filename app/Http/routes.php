@@ -35,15 +35,9 @@ Route::post('oauth/access_token', function() {
 Route::group(['middleware'=>'oauth'], function () {
 
     Route::resource('cliente', 'ClientController', ['except'=>['create', 'edit']]);
-
-    /*Route::group(['middleware' => 'CheckProjectOwner'], function () {
-        Route::resource('projeto', 'ProjectController', ['except'=>['create', 'edit']]);
-    });*/
-
     Route::resource('projeto', 'ProjectController', ['except'=>['create', 'edit']]);
 
-
-    Route::group(['prefix'=>'projeto'], function (){
+    Route::group(['middleware' => 'check.project.permission','prefix'=>'projeto'], function (){
 
         Route::get('{id}/nota', 'ProjectNoteController@index');
         Route::post('{id}/nota', 'ProjectNoteController@store');
@@ -53,10 +47,10 @@ Route::group(['middleware'=>'oauth'], function () {
 
         Route::get('{id}/arquivo', 'ProjectFileController@index');
         Route::post('{id}/arquivo', 'ProjectFileController@store');
-        Route::get('arquivo/{fileId}', 'ProjectFileController@show');
-        Route::get('arquivo/{fileId}/download', 'ProjectFileController@showFile');
-        Route::put('arquivo/{fileId}', 'ProjectFileController@update');
-        Route::delete('arquivo/{fileId}', 'ProjectFileController@destroy');
+        Route::get('{id}/arquivo/{fileId}', 'ProjectFileController@show');
+        Route::get('{id}/arquivo/{fileId}/download', 'ProjectFileController@showFile');
+        Route::put('{id}/arquivo/{fileId}', 'ProjectFileController@update');
+        Route::delete('{id}/arquivo/{fileId}', 'ProjectFileController@destroy');
 
         Route::get('{id}/membro','ProjectController@showMembers');
         Route::get('{id}/membro/{membroId}','ProjectController@member');
@@ -66,33 +60,9 @@ Route::group(['middleware'=>'oauth'], function () {
         Route::get('{id}/task','ProjectTaskController@index');
         Route::get('{id}/task/{taskId}','ProjectTaskController@show');
 
-        Route::post('{id}/file','ProjectFileController@store');
-
     });
 
     Route::get('user/authenticated', 'UserController@authenticated');
-
-    /*
-
-    Route::get('cliente', ['middleware'=>'oauth', 'uses'=>'ClientController@index']);
-    Route::post('cliente', 'ClientController@store');
-    Route::get('cliente/{id}', 'ClientController@show');
-    Route::delete('cliente/{id}', 'ClientController@destroy');
-    Route::post('cliente/edit/{id}', 'ClientController@update');
-
-    Route::get('projeto/{id}/note', 'ProjectNoteController@index');
-    Route::post('projeto/{id}/note', 'ProjectNoteController@store');
-    Route::get('projeto/{id}/note/{noteId}', 'ProjectNoteController@show');
-    Route::put('projeto/{id}/note/{noteId}', 'ProjectNoteController@update');
-    Route::delete('projeto/{id}/note/{noteId}', 'ProjectNoteController@delete');
-
-    Route::get('projeto', 'ProjectController@index');
-    Route::post('projeto', 'ProjectController@store');
-    Route::get('projeto/{id}', 'ProjectController@show');
-    Route::delete('projeto/{id}', 'ProjectController@destroy');
-    Route::post('projeto/edit/{id}', 'ProjectController@update');
-
-    */
 
 });
 

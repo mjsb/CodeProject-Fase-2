@@ -51,15 +51,15 @@ class ProjectService {
     public function checkProjectOwner($projectId) {
 
         $userId = \Authorizer::getResourceOwnerId();
-
         return $this->repository->isOwner($projectId,$userId);
+
     }
 
     public function checkProjectMember($projectId) {
 
         $userId = \Authorizer::getResourceOwnerId();
-
         return $this->repository->hasMember($projectId,$userId);
+
     }
 
     public function checkProjectPermissions($projectId) {

@@ -24,11 +24,10 @@ class CheckProjectOwner {
      */
     public function handle($request, Closure $next) {
 
-        $projectId = $request->route('id') ? $request->route('id') : $request->route('projeto');
-        if($this->service->checkProjectOwner($projectId) == false ) {
+        $projectId = $request->route('id')? $request->route('id') : $request->route('projeto');
+        if($this->service->checkProjectPermissions($projectId) == false ) {
             return ['error'=>'Você não tem permissão para acessar esse projeto!'];
         }
         return $next($request);
-
     }
 }

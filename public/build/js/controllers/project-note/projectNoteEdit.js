@@ -8,6 +8,7 @@ angular.module('app.controllers')
             $scope.save = function () {
                 if($scope.form.$valid) {
                     ProjectNote.update({
+                        id: $routeParams.id,
                         idNote: $scope.projectNote.id},
                         $scope.projectNote,
                         function () {
