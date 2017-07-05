@@ -34,8 +34,11 @@ Route::post('oauth/access_token', function() {
 
 Route::group(['middleware'=>'oauth'], function () {
 
-    Route::resource('cliente', 'ClientController', ['except'=>['create', 'edit']]);
-    Route::resource('projeto', 'ProjectController', ['except'=>['create', 'edit']]);
+    Route::resource('cliente', 'ClientController', ['except'=>['create','edit']]);
+    Route::resource('projeto', 'ProjectController', ['except'=>['create','edit']]);
+
+    //Route::get('projeto.membro', 'ProjectController@projectsMember');
+    Route::resource('projeto.membro', 'ProjectMemberController', ['except'=>['create','edit','update']]);
 
     Route::group(['middleware' => 'check.project.permission','prefix'=>'projeto'], function (){
 
@@ -52,17 +55,16 @@ Route::group(['middleware'=>'oauth'], function () {
         Route::put('{id}/arquivo/{fileId}', 'ProjectFileController@update');
         Route::delete('{id}/arquivo/{fileId}', 'ProjectFileController@destroy');
 
-        Route::get('{id}/membro','ProjectController@showMembers');
-        Route::get('{id}/membro/{membroId}','ProjectController@member');
-        Route::put('{id}/membro/{membroId}', 'ProjectController@addmember');
-        Route::delete('{id}/membro/{membroId}', 'ProjectController@removemember');
-
-        Route::get('{id}/task','ProjectTaskController@index');
-        Route::get('{id}/task/{taskId}','ProjectTaskController@show');
+        Route::get('{id}/tarefa','ProjectTaskController@index');
+        Route::post('{id}/tarefa','ProjectTaskController@store');
+        Route::get('{id}/tarefa/{taskId}','ProjectTaskController@show');
+        Route::put('{id}/tarefa/{taskId}', 'ProjectTaskController@update');
+        Route::delete('{id}/tarefa/{taskId}', 'ProjectTaskController@destroy');
 
     });
 
     Route::get('user/authenticated', 'UserController@authenticated');
+    Route::resource('user','UserController',['except' => ['create','edit']]);
 
 });
 

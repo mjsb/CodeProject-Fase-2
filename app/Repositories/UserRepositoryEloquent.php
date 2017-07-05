@@ -1,22 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marcio
- * Date: 07/06/2017
- * Time: 19:13
- */
 
 namespace CodeProject\Repositories;
 
 use CodeProject\Entities\User;
+use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
+    protected $fieldSearchable = ['name'];
 
-        public function model(){
+    public function model(){
+        return User::class;
+    }
 
-            return User::class;
-            
-        }
+    public function boot()
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
+    }
+
 }

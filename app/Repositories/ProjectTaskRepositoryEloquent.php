@@ -10,8 +10,8 @@ use CodeProject\Entities\ProjectTask;
  * Class ProjectTaskRepositoryEloquent
  * @package namespace CodeProject\Repositories;
  */
-class ProjectTaskRepositoryEloquent extends BaseRepository implements ProjectTaskRepository
-{
+class ProjectTaskRepositoryEloquent extends BaseRepository implements ProjectTaskRepository {
+
     /**
      * Specify Model class name
      *

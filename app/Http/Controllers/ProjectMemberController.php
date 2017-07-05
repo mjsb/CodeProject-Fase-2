@@ -4,46 +4,39 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ProjectMemberRepository;
 use CodeProject\Services\ProjectMemberService;
-
 use Illuminate\Http\Request;
 
+use CodeProject\Http\Requests;
+use CodeProject\Http\Controllers\Controller;
 
 class ProjectMemberController extends Controller
 {
+    /**
+     * @var ProjectMemberRepository
+     */
+    private $repository;
+    /**
+     * @var ProjectMemberService
+     */
+    private $service;
+
+    public function __construct(ProjectMemberRepository $repository, ProjectMemberService $service)
+    {
+        $this->repository = $repository;
+        $this->service = $service;
+        $this->middleware('check.project.owner', ['except' => ['index','show']]);
+        $this->middleware('check.project.permission', ['except' => ['store','destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    private $repository;
-    private $service;
-
-    /**
-     * ProjectMemberController constructor.
-     * @param ProjectMemberRepository $repository
-     * @param ProjectMemberService $service
-     */
-    public function __construct(ProjectMemberRepository $repository, ProjectMemberService $service )
-    {
-        $this->repository = $repository;
-        $this->service = $service;
-    }
-
     public function index($id)
     {
-        //
-        return $this->repository->findWhere(['project_id' => $id]);
+        return $this->repository->findWhere(['project_id'=>$id]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-   /* public function create()
-    {
-        //
-    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -51,11 +44,11 @@ class ProjectMemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
-        #return Project::create($request->all());
-        return $this->repository->create($request->all());
+        $data = $request->all();
+        $data['project_id'] = $id;
+        return $this->service->create($data);
     }
 
     /**
@@ -64,38 +57,11 @@ class ProjectMemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $taskId)
+    public function show($id, $idProjectMember)
     {
-        //
-        #return Project::find($id);
-        #return $this->repository->with('user')->with('client')->find($id);
-        return $this->repository->findWhere(['id' => $taskId, 'project_id' => $id]);
-
+        return $this->repository->find($idProjectMember);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   /* public function edit($id)
-    {
-        //
-    }*/
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        return $this->service->update($request->all(), $id);
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -103,10 +69,8 @@ class ProjectMemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $idProjectMember)
     {
-        //
-        #Project::find($id)->delete();
-        $this->repository->find($id)->delete();
+        $this->service->delete($idProjectMember);
     }
 }

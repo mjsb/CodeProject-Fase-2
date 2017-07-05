@@ -1,66 +1,49 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marcio
- * Date: 16/01/2017
- * Time: 11:30
- */
 
 namespace CodeProject\Services;
 
+
 use CodeProject\Repositories\ProjectMemberRepository;
+use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectMemberValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class ProjectMemberService
 {
-
     /**
-     * ProjectMemberService constructor.
-     * @param ProjectMemberRepository $repository
-     * @param ProjectMemberValidator $validator
-    */
-
+     * @var ProjectMemberRepository
+     */
     protected $repository;
     protected $validator;
+    /**
+     * @var ProjectRepository
+     */
+    private $projectRepository;
 
-    public function __construct(ProjectMemberRepository $repository, ProjectMemberValidator $validator)
+    public function __construct(ProjectMemberRepository $repository, ProjectMemberValidator $validator, ProjectRepository $projectRepository)
     {
         $this->repository = $repository;
         $this->validator = $validator;
+        $this->projectRepository = $projectRepository;
     }
 
-    public function create(array $data) {
-
-        try {
+    public function create(array $data)
+    {
+        try{
             $this->validator->with($data)->passesOrFail();
             return $this->repository->create($data);
-        } catch (ValidatorException $e) {
+        }
+        catch(ValidatorException $e){
             return [
                 'error' => true,
                 'message' => $e->getMessageBag()
             ];
         }
-
-        // enviar email
-        // didparar notificação
-        // postar tweet
-
-        #return$this->repository->create($data);
-
     }
 
-    public function update(array $data, $id) {
-
-        try {
-            $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
-        } catch (ValidatorException $e) {
-            return [
-                'error' => true,
-                'message' => $e->getMessageBag()
-            ];
-        }
-
+    public function delete($id)
+    {
+        $projectMember = $this->repository->skipPresenter()->find($id);
+        return $projectMember->delete();
     }
 }

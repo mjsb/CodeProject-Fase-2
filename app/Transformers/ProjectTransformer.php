@@ -7,8 +7,7 @@ use League\Fractal\TransformerAbstract;
 
 class ProjectTransformer extends TransformerAbstract
 {
-    #protected $defaultIncludes = ['members','notes','tasks','files','client'];
-    protected $defaultIncludes = ['members','client'];
+    protected $defaultIncludes = ['members','notes','tasks','files','client'];
 
     public function transform(Project $project)
     {
@@ -22,17 +21,17 @@ class ProjectTransformer extends TransformerAbstract
             'status' => $project->status,
             'due_date' => $project->due_date,
             'is_member' => $project->owner_id != \Authorizer::getResourceOwnerId(),
-            #'tasks_count' => $project->tasks->count(),
-            #'tasks_opened' => $this->countTasksOpened($project)
+            //'tasks_count' => $project->tasks->count(),
+            //'tasks_opened' => $this->countTasksOpened($project)
         ];
     }
 
     public function includeMembers(Project $project)
     {
-        return $this->collection($project->members, new ProjectMemberTransformer());
+        return $this->collection($project->members, new MemberTransformer());
     }
 
-   /* public function includeNotes(Project $project)
+    public function includeNotes(Project $project)
     {
         return $this->collection($project->notes, new ProjectNoteTransformer());
     }
@@ -45,7 +44,7 @@ class ProjectTransformer extends TransformerAbstract
     public function includeFiles(Project $project)
     {
         return $this->collection($project->files, new ProjectFileTransformer());
-    }*/
+    }
 
     public function includeClient(Project $project)
     {
@@ -55,7 +54,7 @@ class ProjectTransformer extends TransformerAbstract
         return null;
     }
 
-   /* public function countTasksOpened(Project $project){
+    public function countTasksOpened(Project $project){
         $count = 0;
         foreach($project->tasks as $o){
             if($o->status == 1){
@@ -63,6 +62,6 @@ class ProjectTransformer extends TransformerAbstract
             }
         }
         return $count;
-    }*/
+    }
 
 }

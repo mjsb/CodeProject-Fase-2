@@ -4,58 +4,53 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ProjectTaskRepository;
 use CodeProject\Services\ProjectTaskService;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
+use CodeProject\Http\Requests;
+
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class ProjectTaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var ProjectTaskRepository
      */
     private $repository;
-    private $service;
 
     /**
-     * ProjectTaskController constructor.
-     * @param ProjectTaskRepository $repository
-     * @param ProjectTaskService $service
+     * @var ProjectTaskService
      */
-    public function __construct(ProjectTaskRepository $repository, ProjectTaskService $service )
+    private $service;
+
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
     }
 
-    public function index($id)
-    {
-        //
-        return $this->repository->findWhere(['project_id' => $id]);
-    }
-
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-   /* public function create()
+    public function index($id)
     {
-        //
-    }*/
+        return $this->repository->findWhere(['project_id'=>$id]);
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
-        #return Project::create($request->all());
-        return $this->repository->create($request->all());
+        $data = $request->all();
+        $data['project_id'] = $id;
+        return $this->service->create($data);
     }
 
     /**
@@ -64,25 +59,11 @@ class ProjectTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $taskId)
+    public function show($id, $idTask)
     {
-        //
-        #return Project::find($id);
-        #return $this->repository->with('user')->with('client')->find($id);
-        return $this->repository->findWhere(['id' => $taskId, 'project_id' => $id]);
-
+        return $this->repository->find($idTask);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   /* public function edit($id)
-    {
-        //
-    }*/
 
     /**
      * Update the specified resource in storage.
@@ -91,10 +72,11 @@ class ProjectTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $idTask)
     {
-        //
-        return $this->service->update($request->all(), $id);
+        $data = $request->all();
+        $data['project_id'] = $id;
+        return $this->service->update($data, $idTask);
     }
 
     /**
@@ -103,10 +85,8 @@ class ProjectTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $idTask)
     {
-        //
-        #Project::find($id)->delete();
-        $this->repository->find($id)->delete();
+        $this->service->delete($idTask);
     }
 }
