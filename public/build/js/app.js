@@ -1,5 +1,5 @@
 var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.directives','app.services',
-    'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ngFileUpload']);
+    'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ui.bootstrap.modal','ngFileUpload','http-auth-interceptor']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.filters',[]);
@@ -66,12 +66,24 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
         $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
         $httpProvider.defaults.transformRequest = appConfigProvider.config.utils.transformRequest;
         $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformResponse;
+        $httpProvider.interceptors.splice(0,1);
+        $httpProvider.interceptors.splice(0,1);
+        $httpProvider.interceptors.push('oauthFixInterceptor');
 
         $routeProvider
 
             .when('/login', {
                 templateUrl: 'build/views/login.html',
                 controller: 'LoginController'
+            })
+
+            .when('/logout', {
+                resolve: {
+                    logout: ['$location','OAuthToken',function ($location,OAuthToken) {
+                        OAuthToken.removeToken();
+                        return $location.path('/login');
+                    }]
+                }
             })
 
             .when('/home', {
@@ -218,8 +230,8 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
 
     }]);
 
-app.run(['$rootScope', '$location', '$window', 'OAuth',
-    function($rootScope, $location, $window, OAuth) {
+app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
+    function($rootScope, $location, $http, $modal, httpBuffer, OAuth) {
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if (next.$$route.originalPath != '/login') {
@@ -227,24 +239,37 @@ app.run(['$rootScope', '$location', '$window', 'OAuth',
                     $location.path('login');
                 }
             }
-            $rootScope.$emit('pusher-build', {next: next});
-            $rootScope.$emit('pusher-destroy',{next: next});
+           /* $rootScope.$emit('pusher-build', {next: next});
+            $rootScope.$emit('pusher-destroy',{next: next});*/
         });
 
 
-        $rootScope.$on('oauth:error', function(event, rejection) {
+        $rootScope.$on('oauth:error', function(event, data) {
             // Ignore `invalid_grant` error - should be catched on `LoginController`.
-            if ('invalid_grant' === rejection.data.error) {
+            if ('invalid_grant' === data.rejection.data.error) {
                 return;
             }
 
             // Refresh token when a `invalid_token` error occurs.
-            if ('invalid_token' === rejection.data.error) {
-                return OAuth.getRefreshToken();
+            if ('access_denied' === data.rejection.data.error) {
+
+               httpBuffer.append(data.rejection.config, data.deferred);
+
+               if(!$rootScope.loginModalOpened) {
+
+                   var modalInstance = $modal.open({
+
+                       templateUrl: 'build/views/templates/loginModal.html',
+                       controller: 'LoginModalController'
+
+                   });
+                   $rootScope.loginModalOpened = true;
+               }
+               return;
             }
 
             // Redirect to `/login` with the `error_reason`.
-            return $window.location.href = '/login?error_reason=' + rejection.data.error;
+            return $location.path('/login');
         });
 
     }
