@@ -2,7 +2,14 @@
     <div class="row">
         <div class="col-lg-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Listagem de Clientes</div>
+                <div class="panel-heading">
+                    Lista de Clientes
+                    <div class="pull-right">
+                        <a class="btn btn-default " ng-href="#/clientes/dashboard">Dashboard</a>
+                        <a class="btn btn-default " ng-href="#/clientes/novo">Novo</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
                 <div class="panel-body">
                     <table class="table">
                         <thead>
@@ -15,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="o in clients">
+                        <tr dir-paginate="o in clients | itemsPerPage: clientsPerPage" total-items="totalClients" current-page="pagination.current">
                                 <td>{{o.name}}</td>
                                 <td>{{o.responsible}}</td>
                                 <td>{{o.email}}</td>
@@ -27,6 +34,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
                 </div>
             </div>
         </div>

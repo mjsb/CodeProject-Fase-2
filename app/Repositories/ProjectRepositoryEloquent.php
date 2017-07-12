@@ -13,42 +13,37 @@ use CodeProject\Presenters\ProjectPresenter;
  * Class ProjectRepositoryEloquent
  * @package namespace CodeProject\Repositories;
  */
-
-class ProjectRepositoryEloquent extends BaseRepository implements ProjectRepository {
-
+class ProjectRepositoryEloquent extends BaseRepository implements ProjectRepository
+{
     /**
      * Specify Model class name
+     *
      * @return string
      */
-
-    public function model() {
-
+    public function model()
+    {
         return Project::class;
-
     }
 
     /**
      * Boot up the repository, pushing criteria
      */
-
-    public function boot() {
-
+    public function boot()
+    {
         $this->pushCriteria(app(RequestCriteria::class));
-
     }
 
-    public function isOwner($projectId, $userId) {
-
+    public function isOwner($projectId, $userId)
+    {
         if(count($this->skipPresenter()->findWhere(['id'=>$projectId, 'owner_id'=>$userId]))){
             return true;
         }
 
         return false;
-
     }
 
-    public function hasMember($projectId, $memberId) {
-
+    public function hasMember($projectId, $memberId)
+    {
         $project = $this->skipPresenter()->find($projectId);
 
         foreach($project->members as $member){
@@ -61,47 +56,37 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
     }
 
     public function findOwner($userId, $limit = null, $columns = []){
-
         return $this->scopeQuery(function($query) use($userId){
-
             return $query->select('projects.*')->where('owner_id','=',$userId);
-
         })->paginate($limit,$columns);
-
     }
 
     public function findMember($userId, $limit = null, $columns = []){
-
         return $this->scopeQuery(function($query) use($userId){
-
             return $query->select('projects.*')->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')
-
                 ->where('project_members.member_id','=',$userId);
-
         })->paginate($limit,$columns);
-
     }
 
-    public function findWithOwnerAndMember($userId) {
-
+    public function findWithOwnerAndMember($userId)
+    {
         return $this->scopeQuery(function($query) use($userId){
             return $query->select('projects.*')->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')
                 ->where('project_members.member_id','=',$userId)
                 ->union($this->model->query()->getQuery()->where('owner_id','=',$userId));
         })->all();
-
     }
 
-    public function presenter() {
-
+    public function presenter()
+    {
         return ProjectPresenter::class;
-
     }
 
-    public function validator() {
 
+    public function validator()
+    {
         return \CodeProject\Validators\ProjectValidator::class;
-
     }
+
 
 }

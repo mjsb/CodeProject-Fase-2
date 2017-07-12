@@ -1,28 +1,34 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marcio
- * Date: 13/01/2017
- * Time: 19:13
- */
 
 namespace CodeProject\Repositories;
 
 use CodeProject\Entities\Client;
+use CodeProject\Presenters\ClientPresenter;
 use Prettus\Repository\Eloquent\BaseRepository;
 
-class ClientRepositoryEloquent extends BaseRepository implements ClientRepository {
+class ClientRepositoryEloquent extends BaseRepository implements ClientRepository
+{
+    protected $fieldSearchable = [
+        'name'
+    ];
 
-        protected $fieldSearchable = ['name'];
+    public function model(){
+        return Client::class;
+    }
 
-        public function model(){
+    public function validator()
+    {
+        return \CodeProject\Validators\ClientValidator::class;
+    }
 
-            return Client::class;
-            
-        }
+    public function presenter()
+    {
+        return ClientPresenter::class;
+    }
 
-        public function boot() {
+    public function boot()
+    {
+        $this->pushCriteria(app(\Prettus\Repository\Criteria\RequestCriteria::class));
+    }
 
-            $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        }
 }

@@ -5,6 +5,7 @@ angular.module('app.controllers')
                 id: $routeParams.id,
                 idNote: $routeParams.idNote
             });
+
             $scope.save = function () {
                 if($scope.form.$valid) {
                     ProjectNote.update({
@@ -12,9 +13,12 @@ angular.module('app.controllers')
                         idNote: $scope.projectNote.id},
                         $scope.projectNote,
                         function () {
-                            $location.path('/projeto/'+$routeParams.id+'/nota');
+                            $location.path('/projeto/'+$routeParams.id+'/notas');
                     });
                 }
-            }
+            };
+
+            $scope.project_id = $routeParams.id;
+
         }
     ]);

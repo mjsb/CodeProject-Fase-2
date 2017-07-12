@@ -4,5 +4,7 @@ angular.module('app.controllers')
             $scope.projectNotes = ProjectNote.query({
                 id: $routeParams.id
             });
+
+            $scope.project_id = $routeParams.id;
         }
     ]);

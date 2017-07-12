@@ -35,5 +35,7 @@ angular.module('app.controllers')
                     });
                 }
             };
+
+            $scope.project_id = $routeParams.id;
         }
     ]);

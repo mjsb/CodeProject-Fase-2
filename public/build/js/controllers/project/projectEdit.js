@@ -22,7 +22,7 @@ angular.module('app.controllers')
                 if($scope.form.$valid) {
                     $scope.project.owner_id = $cookies.getObject('user').id;
                     Project.update({id: $scope.project.id}, $scope.project, function() {
-                        $location.path('/projeto');
+                        $location.path('/projetos');
                     });
                 }
             };

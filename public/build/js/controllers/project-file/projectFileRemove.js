@@ -5,13 +5,17 @@ angular.module('app.controllers')
                 id: $routeParams.id,
                 idFile: $routeParams.idFile
             });
+
             $scope.remove = function () {
                 $scope.projectFile.$delete({
                     id: $routeParams.id,
                     idFile: $scope.projectFile.id
                 }).then(function () {
-                    $location.path('/projeto/' + $routeParams.id + '/arquivo');
+                    $location.path('/projeto/' + $routeParams.id + '/arquivos');
                 });
-            }
+            };
+
+            $scope.project_id = $routeParams.id;
+
         }
     ]);

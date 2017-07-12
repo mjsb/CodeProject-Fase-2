@@ -2,7 +2,14 @@
     <div class="row">
         <div class="col-lg-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Lista de Projetos</div>
+                <div class="panel-heading">
+                    Lista de Projetos
+                    <div class="pull-right">
+                        <a class="btn btn-default " ng-href="#/projetos/dashboard">Dashboard</a>
+                        <a class="btn btn-default " ng-href="#/projeto/novo">Novo</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
                 <div class="panel-body">
                     <table class="table">
                         <thead>
@@ -15,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="o in projects">
+                        <tr dir-paginate="o in projects | itemsPerPage: projectsPerPage" total-items="totalProjects" current-page="pagination.current">
                                 <td>{{o.name}}</td>
                                 <td>{{o.client.data.name}}</td>
                                 <td>{{o.progress}}%</td>
@@ -32,6 +39,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
                 </div>
             </div>
         </div>

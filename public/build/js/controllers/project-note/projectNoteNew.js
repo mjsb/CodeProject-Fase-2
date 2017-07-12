@@ -8,7 +8,7 @@ angular.module('app.controllers')
                     $scope.projectNote.$save({
                         id: $routeParams.id
                     }).then(function () {
-                        $location.path('/projeto/'+$routeParams.id+'/nota');
+                        $location.path('/projeto/'+$routeParams.id+'/notas');
                     });
                 }
             }

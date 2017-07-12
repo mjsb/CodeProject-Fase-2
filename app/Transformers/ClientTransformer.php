@@ -6,14 +6,13 @@ use CodeProject\Entities\Client;
 use CodeProject\Entities\Project;
 use League\Fractal\TransformerAbstract;
 
-class ClientTransformer extends TransformerAbstract {
-
+class ClientTransformer extends TransformerAbstract
+{
     protected $defaultIncludes = ['projects'];
 
-    public function transform(Client $o) {
-
+    public function transform(Client $o)
+    {
         return [
-
             'id' => (int)$o->id,
             'name' => $o->name,
             'responsible' => $o->responsible,
@@ -21,17 +20,14 @@ class ClientTransformer extends TransformerAbstract {
             'phone' => $o->phone,
             'address' => $o->address,
             'obs' => $o->obs,
-
         ];
-
     }
 
-    public function includeProjects(Client $client) {
-
+    public function includeProjects(Client $client)
+    {
         $transformer = new ProjectTransformer();
         $transformer->setDefaultIncludes([]);
         return $this->collection($client->projects, $transformer);
-
     }
 
 }
