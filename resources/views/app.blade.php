@@ -46,6 +46,8 @@
 		<script src="{{ asset('build/js/vendor/ng-file-upload.min.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/http-auth-interceptor.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/dirPagination.js') }}"></script>
+		<script src="{{ asset('build/js/vendor/pusher.min.js') }}"></script>
+		<script src="{{ asset('build/js/vendor/pusher-angular.min.js') }}"></script>
 
 		<script src="{{ asset('build/js/app.js') }}"></script>
 
@@ -109,8 +111,21 @@
 		<script src="{{ asset('build/js/services/user.js') }}"></script>
 
 	@else
-		<script src="{{ elixir('js/all.js') }}" rel="stylesheet">
+		<script src="{{ elixir('js/all.js') }}" rel="stylesheet"></script>
 	@endif
+
+	<script type="text/javascript">
+
+			var socket = new Pusher('ce82d51c6f2ff622b568');
+			var channel = new socket.subscribe('us2');
+			channel.bind('CodeProject\\Events\\TaskWasIncluded',
+				function (data) {
+			    	console.log(data);
+					
+                }
+			);
+
+	</script>
 
 </body>
 </html>

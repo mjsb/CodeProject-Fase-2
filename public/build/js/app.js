@@ -1,6 +1,6 @@
 var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.directives','app.services',
     'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ui.bootstrap.modal','ngFileUpload','http-auth-interceptor',
-    'angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar','ui.bootstrap.dropdown']);
+    'angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar','ui.bootstrap.dropdown','pusher-angular']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.filters',[]);
@@ -11,6 +11,7 @@ app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSe
 
     var config = {
         baseUrl:'http://localhost:8000',
+        pusherKey: 'ce82d51c6f2ff622b568',
         project:{
             status: [
                 {value: 1, label: 'Parado'},
@@ -268,8 +269,56 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
 
     }]);
 
-app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
-    function($rootScope, $location, $http, $modal, httpBuffer, OAuth) {
+app.run(['$rootScope', '$location', '$http', '$modal', '$cookies', '$pusher', 'httpBuffer', 'OAuth', 'appConfig',
+    function($rootScope, $location, $http, $modal, $cookies, $pusher, httpBuffer, OAuth, appConfig) {
+
+        $rootScope.$on('pusher-build',function(event, data){
+            if (data.next.$$route.originalPath != '/login') {
+                if(OAuth.isAuthenticated()){
+                    if(!window.client) {
+                        window.client = new Pusher(appConfig.pusherKey);
+                        var pusher = $pusher(window.client);
+                        var channel = pusher.subscribe('user.' + $cookies.getObject('user').id);
+                        channel.bind('CodeProject\\Events\\TaskWasIncluded',
+                            function (data) {
+                                var name = data.task.name;
+                                var start_date = data.task.start_date;
+                                var msgm = "Tarefa '"+name+"' foi incluída!";
+
+                                if(start_date != null){
+                                    msgm += "<br> Data de início: "+$filter('dateBr')(start_date);
+                                }
+
+                                Notification.success(msgm);
+                            }
+                        );
+                        channel.bind('CodeProject\\Events\\TaskChanged',
+                            function (data) {
+                                var name = data.task.name;
+                                var start_date = data.task.start_date;
+                                var msgm = "Tarefa '"+name+"' foi alterada!";
+
+                                if(data.task.status == 2){
+                                    msgm = "Tarefa '"+name+"' foi concluída!";
+                                }
+                                Notification.success(msgm);
+                            }
+                        );
+
+                    }
+                }
+            }
+        });
+
+        $rootScope.$on('pusher-destroy',function(event, data){
+            if (data.next.$$route.originalPath == '/login') {
+                if (window.client) {
+                    window.client.disconnect();
+                    window.client = null;
+                }
+            }
+        });
+
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if (next.$$route.originalPath != '/login') {
@@ -277,8 +326,8 @@ app.run(['$rootScope', '$location', '$http', '$modal', 'httpBuffer', 'OAuth',
                     $location.path('login');
                 }
             }
-           /* $rootScope.$emit('pusher-build', {next: next});
-            $rootScope.$emit('pusher-destroy',{next: next});*/
+            $rootScope.$emit('pusher-build', {next: next});
+            $rootScope.$emit('pusher-destroy',{next: next});
         });
 
         $rootScope.$on('$routeChangeSuccess', function(event, current, previous){
