@@ -1,6 +1,6 @@
 var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','app.filters','app.directives','app.services',
     'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ui.bootstrap.modal','ngFileUpload','http-auth-interceptor',
-    'angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar','ui.bootstrap.dropdown','pusher-angular']);
+    'angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar','ui.bootstrap.dropdown','pusher-angular','ui-notification']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.filters',[]);
@@ -11,7 +11,8 @@ app.provider('appConfig', ['$httpParamSerializerProvider', function($httpParamSe
 
     var config = {
         baseUrl:'http://localhost:8000',
-        pusherKey: 'ce82d51c6f2ff622b568',
+        //pusherKey: 'ce82d51c6f2ff622b568',
+        pusherKey: 'fe1b6511a8d79142c35d',
         project:{
             status: [
                 {value: 1, label: 'Parado'},
@@ -106,7 +107,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
                 title: 'Clientes'
             })
 
-            .when('/clientes/novo', {
+            .when('/cliente/novo', {
                 templateUrl: 'build/views/client/new.html',
                 controller: 'ClientNewController',
                 title: 'Novo cliente'
@@ -166,7 +167,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
                 title: 'Nota'
             })
 
-            .when('/projeto/:id/notas/nova', {
+            .when('/projeto/:id/nota/nova', {
                 templateUrl: 'build/views/project-note/new.html',
                 controller: 'ProjectNoteNewController',
                 title: 'Nova nota'
@@ -190,7 +191,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
                 title: 'Arquivos'
             })
 
-            .when('/projeto/:id/arquivos/novo', {
+            .when('/projeto/:id/arquivo/novo', {
                 templateUrl: 'build/views/project-file/new.html',
                 controller: 'ProjectFileNewController',
                 title: 'Novo arquivo'
@@ -220,7 +221,7 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
                 title: 'Tarefa'
             })
 
-            .when('/projeto/:id/tarefas/nova', {
+            .when('/projeto/:id/tarefa/nova', {
                 templateUrl: 'build/views/project-task/new.html',
                 controller: 'ProjectTaskNewController',
                 title: 'Nova tarefa'
@@ -269,8 +270,8 @@ app.config(['$routeProvider','$httpProvider','OAuthProvider','OAuthTokenProvider
 
     }]);
 
-app.run(['$rootScope', '$location', '$http', '$modal', '$cookies', '$pusher', 'httpBuffer', 'OAuth', 'appConfig',
-    function($rootScope, $location, $http, $modal, $cookies, $pusher, httpBuffer, OAuth, appConfig) {
+app.run(['$rootScope', '$location', '$http', '$modal', '$cookies', '$pusher', '$filter', 'httpBuffer', 'OAuth', 'appConfig','Notification',
+    function($rootScope, $location, $http, $modal, $cookies, $pusher, $filter, httpBuffer, OAuth, appConfig, Notification) {
 
         $rootScope.$on('pusher-build',function(event, data){
             if (data.next.$$route.originalPath != '/login') {

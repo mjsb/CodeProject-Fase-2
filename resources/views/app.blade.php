@@ -10,6 +10,7 @@
 		<link href="{{ asset('build/css/flaticon.css') }}" rel="stylesheet">
 		<link href="{{ asset('build/css/components.css') }}" rel="stylesheet">
 		<link href="{{ asset('build/css/app.css') }}" rel="stylesheet">
+		<link href="{{ asset('build/css/vendor/angular-ui-notification.min.css') }}" rel="stylesheet">
 	@else
 		<link href="{{ elixir('css/all.css') }}" rel="stylesheet">
 	@endif
@@ -48,6 +49,7 @@
 		<script src="{{ asset('build/js/vendor/dirPagination.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/pusher.min.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/pusher-angular.min.js') }}"></script>
+		<script src="{{ asset('build/js/vendor/angular-ui-notification.min.js') }}"></script>
 
 		<script src="{{ asset('build/js/app.js') }}"></script>
 
@@ -114,7 +116,7 @@
 		<script src="{{ elixir('js/all.js') }}" rel="stylesheet"></script>
 	@endif
 
-	<script type="text/javascript">
+	{{--<script type="text/javascript">
 
 			var socket = new Pusher('ce82d51c6f2ff622b568');
 			var channel = new socket.subscribe('us2');
@@ -125,7 +127,7 @@
                 }
 			);
 
-	</script>
+	</script>--}}
 
 </body>
 </html>

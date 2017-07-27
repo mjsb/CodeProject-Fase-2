@@ -4,6 +4,8 @@ namespace CodeProject\Repositories;
 
 use CodeProject\Entities\Client;
 use CodeProject\Presenters\ClientPresenter;
+use CodeProject\Validators\ClientValidator;
+use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ClientRepositoryEloquent extends BaseRepository implements ClientRepository
@@ -18,7 +20,7 @@ class ClientRepositoryEloquent extends BaseRepository implements ClientRepositor
 
     public function validator()
     {
-        return \CodeProject\Validators\ClientValidator::class;
+        return ClientValidator::class;
     }
 
     public function presenter()
@@ -28,7 +30,7 @@ class ClientRepositoryEloquent extends BaseRepository implements ClientRepositor
 
     public function boot()
     {
-        $this->pushCriteria(app(\Prettus\Repository\Criteria\RequestCriteria::class));
+        $this->pushCriteria(app(RequestCriteria::class));
     }
 
 }

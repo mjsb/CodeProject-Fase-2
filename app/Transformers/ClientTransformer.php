@@ -3,7 +3,6 @@
 namespace CodeProject\Transformers;
 
 use CodeProject\Entities\Client;
-use CodeProject\Entities\Project;
 use League\Fractal\TransformerAbstract;
 
 class ClientTransformer extends TransformerAbstract
