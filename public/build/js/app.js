@@ -2,7 +2,7 @@ var app = angular.module('app',['ngRoute','angular-oauth2','app.controllers','ap
     'ui.bootstrap.typeahead','ui.bootstrap.tpls','ui.bootstrap.datepicker','ui.bootstrap.modal','ngFileUpload','http-auth-interceptor',
     'angularUtils.directives.dirPagination','mgcrea.ngStrap.navbar','ui.bootstrap.dropdown','pusher-angular','ui-notification']);
 
-angular.module('app.controllers',['ngMessages','angular-oauth2']);
+angular.module('app.controllers',['ngMessages']);
 angular.module('app.filters',[]);
 angular.module('app.directives',[]);
 angular.module('app.services',['ngResource']);
@@ -350,8 +350,8 @@ app.run(['$rootScope', '$location', '$http', '$modal', '$cookies', '$pusher', '$
 
                    var modalInstance = $modal.open({
 
-                       templateUrl: 'build/views/templates/loginModal.html',
-                       controller: 'LoginModalController'
+                       templateUrl: 'build/views/templates/refreshModal.html',
+                       controller: 'RefreshModalController'
 
                    });
                    $rootScope.loginModalOpened = true;

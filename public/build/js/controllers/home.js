@@ -1,5 +1,5 @@
 angular.module('app.controllers')
-    .controller('HomeController', ['$scope','$cookies', '$timeout', '$pusher','$filter','appConfig','Project',
+    .controller('HomeController', ['$scope','$cookies','$timeout','$pusher','$filter','appConfig','Project',
         function ($scope,$cookies,$timeout,$pusher,$filter,appConfig,Project) {
 
             $scope.projects = [];

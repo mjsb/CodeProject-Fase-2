@@ -1,10 +1,12 @@
 angular.module('app.controllers')
-    .controller('ProjectListController', ['$scope', '$routeParams', 'Project',
-        function($scope, $routeParams, Project){
+    .controller('ProjectListController', ['$scope', '$routeParams', 'appConfig', 'Project',
+        function($scope, $routeParams, appConfig, Project){
 
             $scope.projects = [];
             $scope.totalProjects = 0;
             $scope.projectsPerPage = 10;
+
+            $scope.status = appConfig.project.status;
 
             $scope.pagination = {
                 current: 1
@@ -12,6 +14,15 @@ angular.module('app.controllers')
 
             $scope.pageChanged = function(newPage){
                 getResultsPage(newPage);
+            };
+
+            $scope.getStatus = function($id) {
+                for (var i = 0; i < $scope.status.length; i++) {
+                    if($scope.status[i].value === $id){
+                        return $scope.status[i].label;
+                    }
+                }
+                return "";
             };
 
             function getResultsPage(pageNumber){

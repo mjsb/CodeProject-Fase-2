@@ -11,74 +11,79 @@ use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 
-class ProjectFileService {
-
+class ProjectFileService
+{
     protected $repository;
-    protected $projectRepository;
-    protected $validator;
-    private $fileSystem;
-    private $storage;
+    protected $fileValidator;
+    protected $storage;
+    protected $fileSystem;
+    /**
+     * @var ProjectRepository
+     */
+    private $projectRepository;
 
-    public function __construct(ProjectFileRepository $repository, ProjectRepository $projectRepository, ProjectFileValidator $validator, Filesystem $filesystem, Storage $storage){
-
+    public function __construct(ProjectFileRepository $repository, ProjectRepository $projectRepository, ProjectFileValidator $fileValidator,  Storage $storage, Filesystem $filesystem)
+    {
         $this->repository = $repository;
-        $this->projectRepository = $projectRepository;
-        $this->validator = $validator;
-        $this->fileSystem = $filesystem;
+        $this->fileValidator = $fileValidator;
         $this->storage = $storage;
-
+        $this->fileSystem = $filesystem;
+        $this->projectRepository = $projectRepository;
     }
 
-    public function create(array $data) {
-
+    public function create(array $data)
+    {
         try{
-            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
+            $this->fileValidator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
             $project = $this->projectRepository->skipPresenter()->find($data['project_id']);
             $projectFile = $project->files()->create($data);
             $this->storage->put($projectFile->getFileName(), $this->fileSystem->get($data['file']));
 
-            return $projectFile;
+            return ['error'=>false, 'message'=>'Arquivo inserido com sucesso!'];
         }
         catch(ValidatorException $e){
+            $error = $e->getMessageBag();
             return [
                 'error' => true,
-                'message' => $e->getMessageBag(),
+                'message' => "Erro ao enviar o arquivo, alguns campos são obrigatórios!",
+                'messages' => $error->getMessages(),
             ];
         }
     }
 
-    public function update(array $data, $id) {
-
+    public function update(array $data, $id)
+    {
         try{
-            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $this->fileValidator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
             return $this->repository->update($data, $id);
         }
         catch(ValidatorException $e){
+            $error = $e->getMessageBag();
             return [
                 'error' => true,
-                'message' => $e->getMessageBag(),
+                'message' => "Erro ao atualizar o projeto, alguns campos são obrigatórios!",
+                'messages' => $error->getMessages(),
             ];
         }
     }
 
-    public function delete($id) {
-
+    public function delete($id)
+    {
         $projectFile = $this->repository->skipPresenter()->find($id);
-        if($this->storage->exists($projectFile->getFileName())) {
+        if($this->storage->exists($projectFile->getFileName())){
             $this->storage->delete($projectFile->getFileName());
-            $projectFile->delete();
+            return $projectFile->delete();
         }
     }
 
-    public function getFilePath($id) {
-
+    public function getFilePath($id)
+    {
         $projectFile = $this->repository->skipPresenter()->find($id);
         return $this->getBaseURL($projectFile);
-
     }
 
-    private function getBaseURL($projectFile) {
-
+    public function getBaseURL($projectFile)
+    {
         switch ($this->storage->getDefaultDriver()){
             case 'local':
                 return $this->storage->getDriver()->getAdapter()->getPathPrefix()
@@ -86,11 +91,17 @@ class ProjectFileService {
         }
     }
 
-    public function getFileName($id) {
-
+    public function getFileName($id)
+    {
         $projectFile = $this->repository->skipPresenter()->find($id);
         return $projectFile->getFileName();
-
     }
+
+    public function getMimeType($id)
+    {
+        return $this->storage->mimeType($this->getFileName($id));
+    }
+
+
 
 }

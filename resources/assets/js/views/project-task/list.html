@@ -41,7 +41,7 @@
                             <td>{{o.name}}</td>
                             <td>{{o.start_date | dateBr}}</td>
                             <td>{{o.due_date | dateBr}}</td>
-                            <td>{{o.status}}</td>
+                            <td>{{getStatus(o.status)}}</td>
                             <td>
                                 <a ng-href="#/projeto/{{o.project_id}}/tarefa/{{o.id}}/editar">Editar</a> |
                                 <a ng-href="#/projeto/{{o.project_id}}/tarefa/{{o.id}}/excluir">Excluir</a>

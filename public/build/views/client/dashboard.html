@@ -106,7 +106,7 @@
                                     <tr ng-repeat="o in client.projects.data">
                                         <td>{{o.name}}</td>
                                         <td>{{o.due_date | dateBr}}</td>
-                                        <td>{{o.status}}</td>
+                                        <td>{{getStatus(o.status)}}</td>
                                     </tr>
                                     </tbody>
                                 </table>

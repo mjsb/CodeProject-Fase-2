@@ -26,7 +26,7 @@
                                 <td>{{o.name}}</td>
                                 <td>{{o.client.data.name}}</td>
                                 <td>{{o.progress}}%</td>
-                                <td>{{o.status}}</td>
+                                <td>{{getStatus(o.status)}}</td>
                                 <td>{{o.due_date | dateBr}}</td>
                                 <td>
                                     <a ng-href="#/projeto/{{o.id}}/membros">Membros</a> |

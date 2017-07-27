@@ -5,6 +5,7 @@ angular.module('app.controllers')
 
             $scope.projectTask = new ProjectTask();
             $scope.project_id = $routeParams.id;
+            $scope.status = appConfig.projectTask.status;
 
             $scope.save = function(){
                 if($scope.form.$valid){
@@ -25,5 +26,14 @@ angular.module('app.controllers')
             };
 
             $scope.loadTask();
+
+            $scope.getStatus = function($id) {
+                for (var i = 0; i < $scope.status.length; i++) {
+                    if($scope.status[i].value === $id){
+                        return $scope.status[i].label;
+                    }
+                }
+                return "";
+            };
 
         }]);

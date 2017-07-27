@@ -50,6 +50,7 @@
 		<script src="{{ asset('build/js/vendor/pusher.min.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/pusher-angular.min.js') }}"></script>
 		<script src="{{ asset('build/js/vendor/angular-ui-notification.min.js') }}"></script>
+		<script src="{{ asset('build/js/vendor/blob-util.min.js') }}"></script>
 
 		<script src="{{ asset('build/js/app.js') }}"></script>
 
@@ -58,6 +59,7 @@
 		<script src="{{ asset('build/js/controllers/menu.js') }}"></script>
 		<script src="{{ asset('build/js/controllers/login.js') }}"></script>
 		<script src="{{ asset('build/js/controllers/loginModal.js') }}"></script>
+		<script src="{{ asset('build/js/controllers/refreshModal.js') }}"></script>
 		<script src="{{ asset('build/js/controllers/home.js') }}"></script>
 
 		<script src="{{ asset('build/js/controllers/client/clientDashboard.js') }}"></script>
